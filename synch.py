@@ -16,7 +16,7 @@ do_task.timing.cfg_samp_clk_timing(Fs, source='/Dev1/PFI0', samps_per_chan=numSa
 ## building array
 
 do_out = np.zeros([2,numSamples],dtype='bool')
-do_out[0,1:-1] = Truetrigger # (tells the intan system when to record and the non-DO nidaq tasks when to start)
+do_out[0,1:-1] = True #trigger (tells the intan system when to record and the non-DO nidaq tasks when to start)
 cameraRate = 45 # Hz
 cameraOnsets = np.int32(np.arange(0.01,duration,1/cameraRate)*Fs) # the sample for camera trigger up
 cameraOffsets = np.int32(cameraOnsets+0.005*Fs) # the sample for camera trigger down
@@ -28,5 +28,5 @@ do_task.write(do_out)
 
 # starting the task (if adding other tasks, make sure do_task is started last -- it triggers the others)
 do_task.start()
-do_task.wait_until_done()
+do_task.wait_until_done(timeout=65.0)
 do_task.stop()
